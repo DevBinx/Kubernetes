@@ -1,0 +1,14 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: wildcard-host-path
+spec:
+  host: '*.devops.com'
+  upstreams:
+  - name: menu
+    service: menu-svc
+    port: 80
+  routes:
+  - path: /menu
+    action:
+      pass: menu

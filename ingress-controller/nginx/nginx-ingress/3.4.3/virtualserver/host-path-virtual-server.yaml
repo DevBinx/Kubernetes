@@ -1,0 +1,14 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: host-path
+spec:
+  host: 'dev.devops.com'
+  upstreams:
+  - name: account
+    service: account-svc
+    port: 80
+  routes:
+  - path: /
+    action:
+      pass: account

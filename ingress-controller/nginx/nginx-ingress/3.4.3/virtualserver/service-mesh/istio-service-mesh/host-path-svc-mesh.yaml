@@ -1,0 +1,42 @@
+# Account 및 Menu 서비스 배포 필요
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: host-path
+spec:
+  host: 'dev.devops.com'
+  upstreams:
+  - name: account
+    service: account-svc
+    port: 80
+    use-cluster-ip: true
+  routes:
+  - path: /account
+    action:
+      proxy:
+        upstream: account
+        requestHeaders:
+          set:
+          - name: Host
+            value: account-svc.nginx-ingress.svc.cluster.local
+---
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: wildcard-host-path
+spec:
+  host: '*.devops.com'
+  upstreams:
+  - name: menu
+    service: menu-svc
+    port: 80
+    use-cluster-ip: true
+  routes:
+  - path: /menu
+    action:
+      proxy:
+        upstream: menu
+        requestHeaders:
+          set:
+          - name: Host
+            value: menu-svc.nginx-ingress.svc.cluster.local
